@@ -1,0 +1,45 @@
+version: "3.2"
+services:
+  api:
+    image: flask_api_fp
+    container_name: api_fp
+    build:
+      context: ./api
+      target: build
+    ports:
+      - "80:5000"
+    environment:
+      - FLASK_APP=app
+      - FLASK_DEBUG=1
+      - FLASK_ENV=development
+      - PYTHONUNBUFFERED=1 
+    depends_on:
+      - redis
+      - model
+    volumes:
+      - ./feedback:/src/feedback
+      - ./uploads:/src/static/uploads
+      - ./predictions:/src/static/predictions
+      - ./api/templates:/src/templates
+      - ./api/static:/src/static
+
+  redis:
+    image: redis:6.2.6
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  model:
+    image: ml_service_fp
+    container_name: model_fp
+    build:
+      context: ./model
+      target: build
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - redis
+    volumes:
+      - ./predictions:/src/predictions
+      - ./uploads:/src/uploads
+      - ./model/utils_model:/src/utils_model
+

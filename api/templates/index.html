@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Frontend for Retail Store Object Detection."
+    />
+    <title>Retail Store Object Detection</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='web/styles/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <header>
+    </header>
+
+    <hr style="margin-inline: -10px" />
+
+    <section>
+      <h1 id="title">Retail Store Object Detection</h1>
+
+      {% if not filename %}
+
+      <form method="post" action="/" enctype="multipart/form-data">
+  
+        <input type="file" id="uploaded_img" name="file" class="hidden" required>
+        <div >Select an image to 
+        <label for="uploaded_img" class="label_button"><u> Upload</u></label> </div>
+        <br>
+
+        <div id="form_detect">
+
+          <div class="img_container">
+            <img class="output_img" id="my_preview" />
+          </div>
+          
+          <div class="form__group">
+            <div>
+              <input type="checkbox" id="heuristic" name="heuristic" value="True">
+              <label for="heuristic"> Show heuristic detection</label><br>
+            </div>
+            <div>
+              <div class="section__heading">Select annotation style &nbsp</div> 
+              <div >
+                <div class="div_checkbox">
+                  <label><input type="radio", name="rbtn_output_selection" value="heatmap">Heatmap</label> <br>
+                </div>
+                <div class="div_checkbox">
+                  <label><input type="radio", name="rbtn_output_selection" value="bbox">Bounding box</label> <br>
+                </div>
+              </div>
+            </div>
+            <div id="upload-section">
+              <input id="upload-button" type="submit" value="Scan image" class="button" />
+            </div>
+          </div>
+        </div>
+      </form>
+      
+      {% endif %}
+
+      {% if filename %}
+        <div class="img_container">
+              {% if context['annotation_style'] == "bbox" %}
+              <img class="output_img"
+                src="{{ url_for('app_router.display_bbox', filename=filename) }}"
+              />
+              {% endif %}
+              {% if context['annotation_style'] == "heatmap" %}
+              <img class="output_img"
+                src="{{ url_for('app_router.display_heatmap', filename=filename) }}"
+              />
+              {% endif %}
+              {% if context['show_heuristic'] %}
+              <img class="output_img"
+                src="{{ url_for('app_router.display_heuristic', filename=filename) }}"
+              />
+              {% endif %}
+
+        </div>
+        {% if context['mAP2'] %}
+          <div class="row">
+            <div class="col-25">
+              <label for="subject">
+                Mean Average Precision: {{ context['mAP'] }} </label
+              ><br />
+            </div>
+          </div>
+          <form id="form" method="POST" action="/feedback">
+            <button type="submit">Report incorrect answer</button>
+            <input
+              name="report"
+              style="visibility: hidden"
+              value="{'filename': '{{ filename }}', 'mAP': '{{ context['prediction'] }}' }"
+            />
+          </form>
+        {% endif %}
+
+        <div><a href="{{ url_for('app_router.new_upload') }}" class="label_button">Upload</a> a new image</div>
+    
+      {% endif %}
+    </section>
+
+    
+
+    <div id="messages-section">
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for
+      message in messages %}
+
+      <div>
+        <p class="message">{{ message }}</p>
+      </div>
+
+      {% endfor %} {% endif %} {% endwith %}
+    </div>
+
+    <script src="{{ url_for('static', filename='web/js/app.js') }}"></script>
+
+    <noscript>You need to enable JavaScript to view the full site.</noscript>
+  </body>
+</html>
