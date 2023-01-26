@@ -1,5 +1,5 @@
 ---------------------------------------------------
-  Object detection for in-store inventory management.
+  Inventory management with object detection .
 
 ## Team Members
 ---------------------------------------------------
