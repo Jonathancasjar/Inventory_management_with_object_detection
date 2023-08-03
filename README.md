@@ -1,14 +1,5 @@
 ---------------------------------------------------
-  Inventory management with object detection .
-
-## Team Members
----------------------------------------------------
-  + Federico Saban - federicosaban10@gmail.com
-  + José Cisneros - jcisneros@meicaperu.com
-  + Jimmy Llaiqui - jim.llr01@gmail.com
-  + Jonathan Castillo - jcasjar@gmail.com
-  + Laura Argüello  - lau.bluee3@gmail.com
-  + Nicolás Sánchez - nicolassanca95@gmail.com
+  Inventory management with object detection.
 
 # Data Preparation steps
 
@@ -19,22 +10,22 @@ AWS CLI
 - Configure: aws configure
 - List data: aws s3 ls s3://anyoneai-datasets/SKU-110K/SKU110K_fixed/
 - mkdir data
-- Download data in to data folder: aws s3 sync s3://anyoneai-datasets/SKU-110K/SKU110K_fixed/ SKU110K_fixed
+- Download data in to data folder: aws s3 sync s3://anyoneai-datasets/SKU-110K/SKU110K_fixed/ SKU110K_fixed or now you can download from
+  https://drive.google.com/file/d/1iq93lCdhaPUN0fWbLieMtzfB1850pKwd/edit
 - Delete corrupt images : 
- - First we obtained a list of the corrupted images from the Bad Peggy 
-   application run on the local.
- - 
+ - We obtained a list of the corrupted images from the Bad Peggy application and ran it locally.
 
-2. Then we prepare the data into the correct folder structure: 
+
+2. Then prepare the data into the correct folder structure: 
 
 - DOCKER CONTAINER
-# Project containter - Docker
+# Project container - Docker
 
 ## Install
 You can use `Docker` to easily install all the needed packages and libraries:
 
 - **CPU:**
-
+### To build Docker use:
 ```bash
 $ docker build -t casjar_obj_detect --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile .
 ```
@@ -42,7 +33,7 @@ $ docker build -t casjar_obj_detect --build-arg USER_ID=$(id -u) --build-arg GRO
 
 $ docker build -t casjar_obj_detect_gpu --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile_gpu .
 
-### Run Docker
+### To Run Docker use:
 
 - **CPU:**
 ```bash
@@ -62,11 +53,11 @@ $ docker run --rm --net host --gpus all -it \
     bash
 
 ```
-### Run this code to prepare the dataset
+### To prepare the dataset run the following code:
 ```bash 
 $ python3 scripts/prepare_train_test_dataset.py "/home/app/src/data/SKU110K_fixed/images" "/home/app/src/data/SKU110K_fixed/annotations" "/home/app/src/data/SKU110K_fixed/data_v2"
 ```
-### Download the Yolov5 model
+### Download the Yolov5 model and the Dataset with the Missing products from Roboflow
 
 3. Run the model: 
 - In the terminal run:
@@ -74,23 +65,30 @@ $ python3 scripts/prepare_train_test_dataset.py "/home/app/src/data/SKU110K_fixe
  - git clone https://github.com/ultralytics/yolov5
  
 ```
-### Run the notebooks
+- To download the dataset with the missing spaces run the next code:
+```bash
+rf = Roboflow(api_key="YOUR API KEY HERE")
+project = rf.workspace("final-project-object-detection-for-instore-inventory-management").project("empty-spaces-in-a-supermarket-hanger-1upsp")
+dataset = project.version(26).download("yolov5")
+```
+### Notebooks
 
-4. Run Training_notebook to start training models
-
-5. Run Evaluation notebook to evaluate all the trainings
+Open and run the notebooks located in notebooks/ folder in the following order:
+- **EDA** Make an exploratory data analysis.
+- **Training_notebook** Train the first model with Yolov5 and fine-tune the model with the Missing-spaces dataset
+- **Evaluation** Evaluate your trained models in the test set.
 
 
 ### Docker API Services
 
-6. To run the services using compose:
+6. To run the services need to use compose:
 
 ```bash
 $ docker-compose up --build -d
 ```
-7. The best model obtained is moved to the model/models folder for use in the Api.
+7. The best model obtained is moved to the model/models folder for use in the API.
 
-## To obtain a model with a larger number of epochs we decided to have one of the members train his model with 150 epochs, here are the results:
+## To obtain a good model I train the model with 150 epochs, here are the results:
 
 - Results obtained with the initial-model
 https://www.comet.com/sannicosan/initial-model/79be683f051f42b7a4b38c4d152d05c1?experiment-tab=stdout
