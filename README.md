@@ -1,12 +1,14 @@
 ---------------------------------------------------
-  Inventory management with object detection.
+# Inventory management with object detection.
 
-# Data Preparation steps
+![Imagen](resources/Shelf_image2.jpg) ![Imagen2](resources/Image1.png)
 
-1. First download the data from S3 AWS with AWS CLI:
+## Data Preparation steps
+
+## 1. First download the data from S3 AWS with AWS CLI:
 
 AWS CLI
-- Install: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+- Install: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html![Alt text](Shelf_image2.jpg)
 - Configure: aws configure
 - List data: aws s3 ls s3://anyoneai-datasets/SKU-110K/SKU110K_fixed/
 - mkdir data
@@ -16,10 +18,10 @@ AWS CLI
  - We obtained a list of the corrupted images from the Bad Peggy application and ran it locally.
 
 
-2. Then prepare the data into the correct folder structure: 
+## 2. Then prepare the data into the correct folder structure: 
 
 - DOCKER CONTAINER
-# Project container - Docker
+## Project container - Docker
 
 ## Install
 You can use `Docker` to easily install all the needed packages and libraries:
@@ -63,7 +65,6 @@ $ python3 scripts/prepare_train_test_dataset.py "/home/app/src/data/SKU110K_fixe
 - In the terminal run:
 ```bash
  - git clone https://github.com/ultralytics/yolov5
- 
 ```
 - To download the dataset with the missing spaces run the next code:
 ```bash
@@ -90,8 +91,5 @@ $ docker-compose up --build -d
 
 ## To obtain a good model I train the model with 150 epochs, here are the results:
 
-- Results obtained with the initial-model
-https://www.comet.com/sannicosan/initial-model/79be683f051f42b7a4b38c4d152d05c1?experiment-tab=stdout
-
 - Results obtained with the main model
-https://www.comet.com/sannicosan/sku-missing/view/new/panels 
+![Results](resources/results.png)
