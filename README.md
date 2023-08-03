@@ -1,7 +1,8 @@
 ---------------------------------------------------
 # Inventory management with object detection.
 
-![Imagen](resources/Shelf_image2.jpg) ![Imagen2](resources/Image1.png)
+| ![Imagen](resources/Shelf_image2.jpg) | ![Imagen2](resources/Image1.png) |
+| --- | --- |
 
 ## Data Preparation steps
 
